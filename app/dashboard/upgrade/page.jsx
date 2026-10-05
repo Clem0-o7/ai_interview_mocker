@@ -6,7 +6,7 @@ function Upgrade() {
   return (
     <div className="flex flex-col items-center p-8 bg-gray-100 min-h-screen">
       <h1 className="text-2xl font-bold mb-4">Upgrade</h1>
-      <p className="text-gray-500 mb-8">Upgrade to a monthly plan to access unlimited learning resources</p>
+      <p className="text-gray-500 mb-8">Upgrade to a monthly plan to access unlimited mock interviews</p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full">
 
     
@@ -15,7 +15,7 @@ function Upgrade() {
           <h3 className="text-3xl font-bold mb-2">0$<span className="text-base font-normal"> /month</span></h3>
           <ul className="text-left mb-6">
             <li className="flex items-center mb-2">
-              <span className="text-green-500 mr-2">✓</span>Create 3 Free Learning Sessions
+              <span className="text-green-500 mr-2">✓</span>Create 3 Free Mock Interviews
             </li>
             <li className="flex items-center mb-2">
               <span className="text-green-500 mr-2">✓</span>Unlimited Retake Sessions
@@ -38,7 +38,7 @@ function Upgrade() {
           <h3 className="text-3xl font-bold mb-2">7.99$<span className="text-base font-normal"> /month</span></h3>
           <ul className="text-left mb-6">
             <li className="flex items-center mb-2">
-              <span className="text-green-500 mr-2">✓</span>Create 3 Learning Sessions
+              <span className="text-green-500 mr-2">✓</span>Create 3 Mock Interviews
             </li>
             <li className="flex items-center mb-2">
               <span className="text-green-500 mr-2">✓</span>Unlimited Retake Sessions

@@ -32,7 +32,7 @@ export default function SignInPage() {
             </h2>
 
             <p className="mt-4 leading-relaxed text-white/90">
-             Your smart learning companion!
+             Your smart AI Mock Interview companion!
             </p>
           </div>
         </section>

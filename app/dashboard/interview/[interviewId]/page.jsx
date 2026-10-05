@@ -11,7 +11,8 @@ import Link from 'next/link'
 function Interview({params}) {
 
     const[interviewData,setInterviewData]=useState(false);
-    const[webCamEnabled,setWebCamEnabled]=useState(false);
+    const [webCamEnabled, setWebCamEnabled] = useState(false);
+    const [webCamError, setWebCamError] = useState(false);
     useEffect(()=>{
         console.log(params.interviewId)
         GetInterviewDetails();
@@ -29,9 +30,9 @@ function Interview({params}) {
        
         <div className='flex flex-col my-5 gap-5'>
             <div className='flex flex-col p-5 rounded-lg border gap-5 '>
-                <h2 className='text-lg'> <strong> Current Grade/Class : </strong> {interviewData.jobPosition} </h2>
-                <h2 className='text-lg'> <strong> Subjects you're studying : </strong> {interviewData.jobDesc} </h2>
-                <h2 className='text-lg'> <strong> Years of learning experience : </strong> {interviewData.jobExperience} </h2>
+                <h2 className='text-lg'> <strong> Job Role/Job Position : </strong> {interviewData.jobPosition} </h2>
+                <h2 className='text-lg'> <strong> Job Description/Tech Stack : </strong> {interviewData.jobDesc} </h2>
+                <h2 className='text-lg'> <strong> Years of experience : </strong> {interviewData.jobExperience} </h2>
             </div>
             <div className='p-5 border rounded-lg border-yellow-300 bg-yellow-100'>
                 <h2 className='flex gap-2 items-center text-yellow-500'><Lightbulb/><strong>Information</strong></h2>
@@ -40,8 +41,14 @@ function Interview({params}) {
         </div>
         <div >
             {webCamEnabled? <Webcam 
-            onUserMedia={()=>setWebCamEnabled(true)}
-            onUserMediaError={()=>setWebCamEnabled(false)}
+            onUserMedia={() => {
+                setWebCamEnabled(true);
+                setWebCamError(false);
+            }}
+            onUserMediaError={() => {
+                setWebCamEnabled(false);
+                setWebCamError(true);
+            }}
             mirrored={true}
             style={{
                 height:300,
@@ -54,10 +61,25 @@ function Interview({params}) {
             <Button 
                 variant="ghost"
                 className="w-full" 
-                onClick={() => setWebCamEnabled(true)}
+                onClick={async () => {
+                    try {
+                        await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                        setWebCamError(false);
+                        setWebCamEnabled(true);
+                    } catch (err) {
+                        setWebCamEnabled(false);
+                        setWebCamError(true);
+                        alert("Permissions are blocked. Please click the lock icon in your browser's address bar to allow camera and microphone access, then try again.");
+                    }
+                }}
             > 
                 Enable Web cam and Microphone 
             </Button>
+            {webCamError && (
+                <p className='text-red-500 mt-3 text-center'>
+                    Camera access denied or device not found. Please check your browser permissions.
+                </p>
+            )}
         </>
         
             }

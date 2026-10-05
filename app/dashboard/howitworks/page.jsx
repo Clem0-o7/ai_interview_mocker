@@ -5,7 +5,7 @@ function HowItWorks() {
   return (
     <div className="flex flex-col items-center p-8 bg-gray-100 min-h-screen">
       <h1 className="text-2xl font-bold mb-4">How It Works</h1>
-      <p className="text-gray-500 mb-8">Learn how our platform helps you enhance your learning experience efficiently!</p>
+      <p className="text-gray-500 mb-8">Learn how our platform helps you enhance your interview experience efficiently!</p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full">
 
         {/* Step 1 */}
@@ -17,8 +17,8 @@ function HowItWorks() {
 
         {/* Step 2 */}
         <div className="border-2 border-gray-300 rounded-lg p-6 bg-white text-center shadow-lg transition-transform duration-300 hover:bg-blue-200 hover:scale-105">
-          <h2 className="text-lg font-bold mb-4">Step 2: Choose Your Learning Topic</h2>
-          <p className="text-md mb-4">Select a subject or topic to get personalized questions.</p>
+          <h2 className="text-lg font-bold mb-4">Step 2: Choose Your Job Role</h2>
+          <p className="text-md mb-4">Select a job role or description to get personalized questions.</p>
           <img src="/stepp2.png" alt="Step 2" className="w-full h-auto mb-4" />
         </div>
 
@@ -39,7 +39,7 @@ function HowItWorks() {
         {/* Step 5 */}
         <div className="border-2 border-gray-300 rounded-lg p-6 bg-white text-center shadow-lg transition-transform duration-300 hover:bg-blue-200 hover:scale-105">
           <h2 className="text-lg font-bold mb-4">Step 5: Review and Improve</h2>
-          <p className="text-md mb-4">Use the feedback to improve your understanding and skills in the subject.</p>
+          <p className="text-md mb-4">Use the feedback to improve your understanding and skills for the interview.</p>
           <img src="/steppp5.jpg" alt="Step 5" className="w-full h-auto mb-4" />
         </div>
 

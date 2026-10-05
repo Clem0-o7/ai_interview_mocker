@@ -1,30 +1,45 @@
-const {
-    GoogleGenerativeAI,
-    HarmCategory,
-    HarmBlockThreshold,
-  } = require("@google/generative-ai");
-  
-  const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-  const genAI = new GoogleGenerativeAI(apiKey);
-  
-  const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
-  });
-  
-  const generationConfig = {
-    temperature: 1,
-    topP: 0.95,
-    topK: 64,
-    maxOutputTokens: 8192,
-    responseMimeType: "text/plain",
-  };
+"use server";
+import { GoogleGenAI } from '@google/genai';
 
-  
-    export const chatSession = model.startChat({
-      generationConfig,
-   // safetySettings: Adjust safety settings
-   // See https://ai.google.dev/gemini-api/docs/safety-settings
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+
+// Function to generate content using the simplified API
+export const generateContent = async (inputText) => {
+  try {
+    const response = await ai.models.generateContent({
+      model: 'gemma-4-26b-a4b-it',
+      contents: inputText,
     });
+    
+    return response.text;
+  } catch (error) {
+    console.error("Error generating content:", error);
+    throw error;
+  }
+};
+
+// Function to generate content with streaming
+export const generateContentStream = async (inputText) => {
+  try {
+    const response = await ai.models.generateContentStream({
+      model: 'gemma-4-26b-a4b-it',
+      contents: inputText,
+    });
+
+    let fullResponse = '';
+    for await (const chunk of response) {
+      fullResponse += chunk.text;
+    }
+
+    return fullResponse;
+  } catch (error) {
+    console.error("Error generating content with streaming:", error);
+    throw error;
+  }
+};
+
+// Removed Legacy chat session because use server requires only async functions
   
     
   

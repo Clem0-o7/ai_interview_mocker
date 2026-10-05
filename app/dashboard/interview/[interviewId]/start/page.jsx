@@ -22,8 +22,23 @@ function StartInterview({params}) {
         .where(eq(MockInterview.mockId,params.interviewId));
         
         const jsonMockResp=JSON.parse(result[0].jsonMockResp);
-        console.log(jsonMockResp);
-        setMockInterviewQuestion(jsonMockResp);
+        console.log("Raw JSON Response:", jsonMockResp);
+        
+        // Handle both old and new JSON formats
+        let questions;
+        if (jsonMockResp.questions && Array.isArray(jsonMockResp.questions)) {
+            // New format: { questions: [...] }
+            questions = jsonMockResp.questions;
+        } else if (Array.isArray(jsonMockResp)) {
+            // Old format: [...]
+            questions = jsonMockResp;
+        } else {
+            // Fallback: try to extract questions from any format
+            questions = jsonMockResp.questions || [];
+        }
+        
+        console.log("Processed questions:", questions);
+        setMockInterviewQuestion(questions);
         setInterviewData(result[0]);
     }
   return (

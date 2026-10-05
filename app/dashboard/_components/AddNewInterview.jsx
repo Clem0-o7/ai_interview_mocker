@@ -10,7 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { chatSession } from '@/utils/GeminiAIModal';
+import { generateContent } from '@/utils/GeminiAIModal';
 import { LoaderCircle } from 'lucide-react';
 import { MockInterview } from '@/utils/schema';
 import {db} from '@/utils/db';
@@ -31,47 +31,76 @@ function AddNewInterview() {
   const router = useRouter();
 
   const onSubmit = async (e) => {
-    setLoading(true)
+    setLoading(true);
     e.preventDefault();
 
     console.log(jobPosition, jobDesc, jobExperience);
 
-    const InputPrompt =
-      "Job position: " + jobPosition +
-      " ,Job Description: " + jobDesc +
-      " , Years of Experience: " + jobExperience +
-      ", Depends on Job Position , Job Description & Years of experience give us " +
-      process.env.NEXT_PUBLIC_INTERVIEW_QUESTION +
-      " interview question along with Answer in JSON format , Give us question and answer field on JSON";
+    const InputPrompt = `Job position: ${jobPosition}, Job Description: ${jobDesc}, Years of Experience: ${jobExperience}. Based on the Job Position, Job Description & Years of experience, generate ${process.env.NEXT_PUBLIC_INTERVIEW_QUESTION} interview questions along with answers in JSON format. Please provide the response in the following JSON structure:
+    {
+      "questions": [
+        {
+          "question": "question text here",
+          "answer": "answer text here"
+        }
+      ]
+    }
+    Only return valid JSON, no additional text or formatting.`;
 
-      const result=await chatSession.sendMessage(InputPrompt);
-
-      const MockJsonResp = (result.response.text()).replace('```json','').replace('```','');
-      console.log(JSON. parse(MockJsonResp));
-      setJsonResponse(MockJsonResp);
+    try {
+      const result = await generateContent(InputPrompt);
+      console.log("Raw AI Response:", result);
       
-      if(MockJsonResp){
-      const resp = await db.insert(MockInterview)
-      .values({
-        mockId:uuidv4(),
-        jsonMockResp :MockJsonResp,
-        jobPosition:jobPosition,
-        jobDesc:jobDesc,
-        jobExperience:jobExperience,
-        createdBy:user?.primaryEmailAddress?.emailAddress,
-        createdAt:moment().format('DD-MM-yyyy')
-      }).returning({mockId:MockInterview.mockId})
-
-      console.log("Inserted ID:",resp)
-      if(resp){
-        setOpenDailog(false);
-        router.push('/dashboard/interview/'+resp[0]?.mockId)
+      // Clean up the response to extract JSON
+      let cleanedResponse = result.trim();
+      
+      // Remove markdown code blocks if present
+      cleanedResponse = cleanedResponse.replace(/```json\n?/g, '');
+      cleanedResponse = cleanedResponse.replace(/```\n?/g, '');
+      
+      // Remove any text before the first { and after the last }
+      const firstBrace = cleanedResponse.indexOf('{');
+      const lastBrace = cleanedResponse.lastIndexOf('}');
+      
+      if (firstBrace !== -1 && lastBrace !== -1) {
+        cleanedResponse = cleanedResponse.substring(firstBrace, lastBrace + 1);
       }
-    }
-    else{
-      console.log("ERROR");
-    }
+      
+      console.log("Cleaned Response:", cleanedResponse);
+      
+      // Validate JSON
+      const parsedJson = JSON.parse(cleanedResponse);
+      console.log("Parsed JSON:", parsedJson);
+      
+      setJsonResponse(cleanedResponse);
+      
+      if (cleanedResponse) {
+        const resp = await db.insert(MockInterview)
+          .values({
+            mockId: uuidv4(),
+            jsonMockResp: cleanedResponse,
+            jobPosition: jobPosition,
+            jobDesc: jobDesc,
+            jobExperience: jobExperience,
+            createdBy: user?.primaryEmailAddress?.emailAddress,
+            createdAt: moment().format('DD-MM-yyyy')
+          }).returning({ mockId: MockInterview.mockId });
+
+        console.log("Inserted ID:", resp);
+        if (resp) {
+          setOpenDailog(false);
+          router.push('/dashboard/interview/' + resp[0]?.mockId);
+        }
+      } else {
+        console.log("ERROR: No valid JSON response");
+        alert("Failed to generate interview questions. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error in onSubmit:", error);
+      alert("An error occurred while generating interview questions. Please check your API key and try again.");
+    } finally {
       setLoading(false);
+    }
   }
 
 
@@ -87,29 +116,31 @@ function AddNewInterview() {
       <Dialog open={openDailog}>
         <DialogContent className="max-w-2xl bg-white">
           <DialogHeader>
-            <DialogTitle className="text-2xl">Tell us more about your learning journey</DialogTitle>
+            <DialogTitle className="text-2xl">Tell us more about your job interviewing</DialogTitle>
             <DialogDescription>
-              <form onSubmit={onSubmit}>
-                <div>
-                  <h2>Add details about your grade, favorite subjects, and how long you've been studying them</h2>
-                  <div className='mt-7 my-3'>
-                    <label>Current Grade/Class</label>
+              Add details about your job position/role, job description and years of experience
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={onSubmit}>
+            <div>
+              <div className='mt-7 my-3'>
+                    <label>Job Role/Job Position</label>
                     <Input
-                      placeholder="Ex. 10th Grade Student"
+                      placeholder="Ex. Full Stack Developer"
                       required
                       onChange={(event) => setJobPosition(event.target.value)}
                     />
                   </div>
                   <div className='my-3'>
-                    <label>Subjects you're studying (In short)</label>
+                    <label>Job Description/ Tech Stack (In short)</label>
                     <Textarea
-                      placeholder="Ex. Math, Science, English, History, etc."
+                      placeholder="Ex. React, Angular, NodeJs, MySql etc"
                       required
                       onChange={(event) => setJobDesc(event.target.value)}
                     />
                   </div>
                   <div className='my-3'>
-                    <label>Years of learning experience</label>
+                    <label>Years of experience</label>
                     <Input
                       placeholder="Ex.5"
                       type="number"
@@ -125,12 +156,10 @@ function AddNewInterview() {
                     {loading ?
                       <>
                         <LoaderCircle className='animate-spin' /> Generating from AI
-                      </> : 'Start Learning Session'}
+                      </> : 'Start Interview'}
                   </Button>
                 </div>
-              </form>
-            </DialogDescription>
-          </DialogHeader>
+          </form>
         </DialogContent>
       </Dialog>
     </div>
