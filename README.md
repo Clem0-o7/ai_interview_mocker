@@ -1,40 +1,42 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🎯 PrepMate - AI Interview Mocker
 
-## Getting Started
+PrepMate is an AI-powered mock interview platform designed to help job seekers practice their interviewing skills and get hired faster. By leveraging state-of-the-art LLMs, PrepMate generates realistic, role-specific interview questions and provides instant, actionable feedback based on your actual voice responses.
 
-First, run the development server:
+## ✨ Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Tailored Mock Interviews:** Enter your target job role, tech stack, and experience level, and PrepMate will dynamically generate a custom 5-question interview.
+- **Real-Time Voice Analysis:** Uses speech-to-text to capture your answers naturally, just like a real interview.
+- **AI-Powered Feedback:** Evaluates your answers against the ideal response, providing a score out of 10 and concrete suggestions for improvement.
+- **Beautiful & Responsive UI:** Built with Next.js, Tailwind CSS, and Shadcn UI for a seamless, modern experience.
+- **Secure Authentication:** Integrated with Clerk for secure, production-ready user management.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠 Tech Stack
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- **Framework:** Next.js (App Router)
+- **Styling:** Tailwind CSS + Shadcn UI
+- **Authentication:** Clerk
+- **Database:** Neon (Serverless Postgres) + Drizzle ORM
+- **AI Model:** Google Gemini (gemma-4)
+- **Audio Processing:** react-speech-recognition
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## 🚀 Getting Started
 
-## Learn More
+1. **Clone the repository**
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+3. **Set up Environment Variables:**
+   Create a `.env.local` file and add your credentials.
+4. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-To learn more about Next.js, take a look at the following resources:
+## 📦 Deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+PrepMate is optimized for deployment on Vercel. Connect your GitHub repository to Vercel and ensure your environment variables are set in the Vercel dashboard.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-"# ai-interview-mocker" 
-"# ai-interview-mocker" 
-"# ai-interview-mocker" 
-"# gemini-ai-learning" 
+---
+*Built to help you ace your next interview.*
